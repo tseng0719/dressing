@@ -1,178 +1,102 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>服裝推薦系統</title>
+  <meta charset="UTF-8">
+  <title>今天想聽什麼呢？🎧</title>
   <style>
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #f8f8fc;
-      margin: 0; padding: 1rem;
-    }
-    .container {
+      font-family: "Noto Sans TC", sans-serif;
+      background: #fff5f8;
+      color: #333;
+      padding: 30px;
       max-width: 600px;
-      background: white;
       margin: auto;
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.1);
     }
     h1 {
       text-align: center;
-      margin-bottom: 1rem;
+      color: #d75a8a;
     }
     label {
+      font-weight: bold;
       display: block;
-      margin-top: 1rem;
-      font-weight: 600;
+      margin-top: 20px;
     }
     select, button {
       width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-      border-radius: 6px;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
       border: 1px solid #ccc;
-    }
-    .checkbox-group label {
-      display: inline-block;
-      margin-right: 1rem;
-      font-weight: normal;
-      cursor: pointer;
+      font-size: 1em;
     }
     button {
-      background-color: #4f46e5;
-      color: white;
-      border: none;
-      margin-top: 2rem;
+      background-color: #ffd5ec;
+      color: #d75a8a;
+      font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      border: none;
+      margin-top: 20px;
     }
-    button:hover {
-      background-color: #3730a3;
-    }
-    .result {
-      margin-top: 2rem;
-      padding: 1rem;
-      background: #eef2ff;
+    iframe {
+      display: block;
+      margin: 20px auto;
+      width: 100%;
+      height: 315px;
       border-radius: 10px;
-      display: none;
-    }
-    a {
-      color: #4f46e5;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    a:hover {
-      text-decoration: underline;
+      border: none;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>👕 你的穿搭建議</h1>
+  <h1>今天想聽什麼呢？🎶</h1>
 
-    <label for="skin">膚色</label>
-    <select id="skin" required>
-      <option value="">請選擇</option>
-      <option>冷白</option>
-      <option>暖白</option>
-      <option>小麥色</option>
-      <option>古銅</option>
-      <option>深色</option>
-    </select>
+  <label for="mood">你現在的心情是？😊</label>
+  <select id="mood">
+    <option value="開心">開心！</option>
+    <option value="難過">有點難過</option>
+    <option value="放鬆">想放鬆一下</option>
+    <option value="生氣">有點煩躁</option>
+    <option value="戀愛">戀愛的感覺💖</option>
+  </select>
 
-    <label for="age">年齡</label>
-    <select id="age" required>
-      <option value="">請選擇</option>
-      <option>15-20</option>
-      <option>21-30</option>
-      <option>31-40</option>
-      <option>41+</option>
-    </select>
+  <label for="genre">想聽什麼風格？🎧</label>
+  <select id="genre">
+    <option value="抒情">抒情歌</option>
+    <option value="搖滾">搖滾</option>
+    <option value="輕音樂">輕音樂</option>
+    <option value="嘻哈">嘻哈/饒舌</option>
+    <option value="動漫歌曲">動漫歌曲</option>
+  </select>
 
-    <label>穿衣風格（可複選）</label>
-    <div class="checkbox-group" id="styleGroup">
-      <label><input type="checkbox" value="韓系" /> 韓系</label>
-      <label><input type="checkbox" value="日系" /> 日系</label>
-      <label><input type="checkbox" value="街頭" /> 街頭</label>
-      <label><input type="checkbox" value="極簡" /> 極簡</label>
-      <label><input type="checkbox" value="甜美" /> 甜美</label>
-      <label><input type="checkbox" value="正式" /> 正式</label>
-    </div>
+  <button onclick="recommend()">給我一首推薦歌曲 🎵</button>
 
-    <label for="hair">頭髮顏色</label>
-    <select id="hair" required>
-      <option value="">請選擇</option>
-      <option>黑</option>
-      <option>棕</option>
-      <option>金</option>
-      <option>紅</option>
-      <option>特殊色</option>
-    </select>
-
-    <label for="scene">今天要去哪？</label>
-    <select id="scene" required>
-      <option value="">請選擇</option>
-      <option>學校</option>
-      <option>上班</option>
-      <option>約會</option>
-      <option>出遊</option>
-      <option>派對</option>
-    </select>
-
-    <button onclick="generate()">🎯 產生推薦</button>
-
-    <div class="result" id="resultBox"></div>
-  </div>
+  <div id="result"></div>
 
   <script>
-    function generate() {
-      const skin = document.getElementById('skin').value;
-      const age = document.getElementById('age').value;
-      const hair = document.getElementById('hair').value;
-      const scene = document.getElementById('scene').value;
-      const styles = Array.from(document.querySelectorAll('#styleGroup input:checked')).map(cb => cb.value);
+    const API_KEY = "AIzaSyC0FVu9nGrvov7pJQocsnAjRIAIrCmms0s";
 
-      if (!skin || !age || styles.length === 0 || !hair || !scene) {
-        alert('請完整填寫所有欄位！');
-        return;
-      }
+    function recommend() {
+      const mood = document.getElementById("mood").value;
+      const genre = document.getElementById("genre").value;
+      const query = `${mood} ${genre} 音樂`;
 
-      const styleText = styles.join(" / ");
-      const sampleOutfits = {
-        '街頭': '帽T + 寬褲 + 老爹鞋',
-        '極簡': '素色針織衫 + 高腰褲 + 白球鞋',
-        '韓系': '落肩襯衫 + 百褶裙 + 瑪麗珍',
-        '日系': '襯衫 + 工裝褲 + 球鞋',
-        '甜美': '碎花上衣 + 蕾絲裙 + 淺色娃娃鞋',
-        '正式': '西裝外套 + 鉛筆裙 + 皮鞋'
-      };
-
-      let outfit = styles.map(s => sampleOutfits[s] || '').filter(Boolean).join(" 或 ");
-
-      // 根據膚色決定色系字詞
-      let colorKeywords = '';
-      if (skin.includes('冷')) colorKeywords = '冷色系';
-      else if (skin.includes('暖')) colorKeywords = '暖色系';
-      else colorKeywords = '大地色系';
-
-      // 組合購物關鍵字（風格 + 色系 + 場合）
-      const keywords = styles.join(" ") + " " + colorKeywords + " " + scene + "穿搭";
-
-      // 蝦皮購物搜尋連結
-      const shoppingUrl = 'https://shopee.tw/search?keyword=' + encodeURIComponent(keywords);
-
-      document.getElementById('resultBox').innerHTML = `
-        <h3>你的今日推薦：</h3>
-        <p><strong>搭配風格：</strong>${styleText}</p>
-        <p><strong>場合：</strong>${scene}</p>
-        <p><strong>建議穿搭：</strong>${outfit}</p>
-        <p><strong>推薦色系：</strong>根據你的膚色（${skin}），可嘗試 ${colorKeywords}。</p>
-        <p><strong>購物參考：</strong><a href="${shoppingUrl}" target="_blank" rel="noopener noreferrer">點我到蝦皮搜尋「${keywords}」</a></p>
-      `;
-      document.getElementById('resultBox').style.display = 'block';
+      fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=1&q=${encodeURIComponent(query)}&key=${API_KEY}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.items && data.items.length > 0) {
+            const videoId = data.items[0].id.videoId;
+            document.getElementById("result").innerHTML = `
+              <h3>這首歌適合現在的你 💕</h3>
+              <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+            `;
+          } else {
+            document.getElementById("result").innerHTML = "找不到適合的歌曲 😢 請再試一次。";
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          document.getElementById("result").innerHTML = "出現了一點小問題，請稍後再試！";
+        });
     }
   </script>
 </body>
