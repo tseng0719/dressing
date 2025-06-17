@@ -1,179 +1,242 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>服裝推薦系統</title>
+  <title>服裝穿搭推薦系統</title>
   <style>
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #f8f8fc;
-      margin: 0; padding: 1rem;
-    }
-    .container {
+      font-family: "Microsoft JhengHei", sans-serif;
+      background: #fafafa;
+      margin: 20px;
       max-width: 600px;
-      background: white;
-      margin: auto;
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 1rem;
     }
     label {
       display: block;
-      margin-top: 1rem;
-      font-weight: 600;
+      margin: 10px 0 4px;
+      font-weight: bold;
     }
-    select, button {
+    select, input[type="text"], input[type="number"] {
       width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
+      padding: 8px;
       font-size: 1rem;
-      border-radius: 6px;
       border: 1px solid #ccc;
-    }
-    .checkbox-group label {
-      display: inline-block;
-      margin-right: 1rem;
-      font-weight: normal;
-      cursor: pointer;
+      border-radius: 4px;
+      box-sizing: border-box;
     }
     button {
-      background-color: #4f46e5;
+      margin-top: 15px;
+      padding: 10px 15px;
+      font-size: 1.1rem;
+      background-color: #4285f4;
       color: white;
       border: none;
-      margin-top: 2rem;
+      border-radius: 5px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
     button:hover {
-      background-color: #3730a3;
+      background-color: #357ae8;
     }
-    .result {
-      margin-top: 2rem;
-      padding: 1rem;
-      background: #eef2ff;
-      border-radius: 10px;
-      display: none;
-    }
-    a {
-      color: #4f46e5;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    a:hover {
-      text-decoration: underline;
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 0 10px #ddd;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>👕 你的穿搭建議</h1>
 
-    <label for="skin">膚色</label>
-    <select id="skin" required>
-      <option value="">請選擇</option>
-      <option>冷白</option>
-      <option>暖白</option>
-      <option>小麥色</option>
-      <option>古銅</option>
-      <option>深色</option>
+  <h2>服裝穿搭推薦系統</h2>
+
+  <form id="styleForm">
+    <label for="gender">性別：</label>
+    <select id="gender" name="gender" required>
+      <option value="" disabled selected>請選擇性別</option>
+      <option value="male">男</option>
+      <option value="female">女</option>
+      <option value="other">其他/不便透露</option>
     </select>
 
-    <label for="age">年齡</label>
-    <select id="age" required>
-      <option value="">請選擇</option>
-      <option>15-20</option>
-      <option>21-30</option>
-      <option>31-40</option>
-      <option>41+</option>
+    <label for="age">年齡：</label>
+    <input type="number" id="age" name="age" min="1" max="120" placeholder="請輸入年齡" required />
+
+    <label for="skinTone">膚色：</label>
+    <select id="skinTone" name="skinTone" required>
+      <option value="" disabled selected>請選擇膚色</option>
+      <option value="fair">白皙</option>
+      <option value="medium">自然膚色</option>
+      <option value="olive">健康小麥膚色</option>
+      <option value="dark">深膚色</option>
     </select>
 
-    <label>穿衣風格（可複選）</label>
-    <div class="checkbox-group" id="styleGroup">
-      <label><input type="checkbox" value="韓系" /> 韓系</label>
-      <label><input type="checkbox" value="日系" /> 日系</label>
-      <label><input type="checkbox" value="街頭" /> 街頭</label>
-      <label><input type="checkbox" value="極簡" /> 極簡</label>
-      <label><input type="checkbox" value="甜美" /> 甜美</label>
-      <label><input type="checkbox" value="正式" /> 正式</label>
-    </div>
-
-    <label for="hair">頭髮顏色</label>
-    <select id="hair" required>
-      <option value="">請選擇</option>
-      <option>黑</option>
-      <option>棕</option>
-      <option>金</option>
-      <option>紅</option>
-      <option>特殊色</option>
+    <label for="hair">頭髮顏色：</label>
+    <select id="hair" name="hair" required>
+      <option value="" disabled selected>請選擇頭髮顏色</option>
+      <option value="black">黑色</option>
+      <option value="brown">棕色</option>
+      <option value="blonde">金色</option>
+      <option value="red">紅色</option>
+      <option value="gray">灰色/白髮</option>
+      <option value="other">其他</option>
     </select>
 
-    <label for="scene">今天要去哪？</label>
-    <select id="scene" required>
-      <option value="">請選擇</option>
-      <option>學校</option>
-      <option>上班</option>
-      <option>約會</option>
-      <option>出遊</option>
-      <option>派對</option>
+    <label for="style">喜歡的穿搭風格：</label>
+    <select id="style" name="style" required>
+      <option value="" disabled selected>請選擇風格</option>
+      <option value="casual">休閒</option>
+      <option value="formal">正式</option>
+      <option value="sporty">運動風</option>
+      <option value="bohemian">波西米亞</option>
+      <option value="street">街頭潮流</option>
+      <option value="classic">經典</option>
+      <option value="minimalist">極簡</option>
+      <option value="vintage">復古</option>
     </select>
 
-    <button onclick="generate()">🎯 產生推薦</button>
+    <label for="activity">今日行程類型：</label>
+    <select id="activity" name="activity" required>
+      <option value="" disabled selected>請選擇今日行程</option>
+      <option value="work">上班／正式會議</option>
+      <option value="casual">休閒逛街／約會</option>
+      <option value="sport">運動健身</option>
+      <option value="party">晚宴／派對</option>
+      <option value="travel">旅行／度假</option>
+    </select>
 
-    <div class="result" id="resultBox"></div>
-  </div>
+    <button type="submit">送出推薦</button>
+  </form>
+
+  <div id="result"></div>
 
   <script>
-    function generate() {
-      const skin = document.getElementById('skin').value;
-      const age = document.getElementById('age').value;
-      const hair = document.getElementById('hair').value;
-      const scene = document.getElementById('scene').value;
-      const styles = Array.from(document.querySelectorAll('#styleGroup input:checked')).map(cb => cb.value);
+    const form = document.getElementById("styleForm");
+    const resultDiv = document.getElementById("result");
 
-      if (!skin || !age || styles.length === 0 || !hair || !scene) {
-        alert('請完整填寫所有欄位！');
-        return;
-      }
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
 
-      const styleText = styles.join(" / ");
-      const sampleOutfits = {
-        '街頭': '帽T + 寬褲 + 老爹鞋',
-        '極簡': '素色針織衫 + 高腰褲 + 白球鞋',
-        '韓系': '落肩襯衫 + 百褶裙 + 瑪麗珍',
-        '日系': '襯衫 + 工裝褲 + 球鞋',
-        '甜美': '碎花上衣 + 蕾絲裙 + 淺色娃娃鞋',
-        '正式': '西裝外套 + 鉛筆裙 + 皮鞋'
+      const data = {
+        gender: form.gender.value,
+        age: Number(form.age.value),
+        skinTone: form.skinTone.value,
+        hair: form.hair.value,
+        style: form.style.value,
+        activity: form.activity.value
       };
 
-      let outfit = styles.map(s => sampleOutfits[s] || '').filter(Boolean).join(" 或 ");
+      // 性別建議
+      const genderNote = {
+        male: "您的性別是男性，建議挑選更有輪廓感與硬挺的剪裁。",
+        female: "您的性別是女性，建議選擇柔美線條或展現曲線的設計。",
+        other: "您的性別未明，建議選擇中性風或符合您個人喜好的服裝。"
+      };
 
-      // 根據膚色決定色系字詞
-      let colorKeywords = '';
-      if (skin.includes('冷')) colorKeywords = '冷色系';
-      else if (skin.includes('暖')) colorKeywords = '暖色系';
-      else colorKeywords = '大地色系';
+      // 年齡建議
+      let ageStyle = "";
+      if (data.age < 20) {
+        ageStyle = "年輕活力，建議多嘗試鮮豔色彩與流行元素。";
+      } else if (data.age <= 35) {
+        ageStyle = "成熟時尚，適合經典與流行元素結合的穿搭。";
+      } else if (data.age <= 50) {
+        ageStyle = "穩重優雅，建議選擇簡約質感的單品。";
+      } else {
+        ageStyle = "優雅知性，推薦舒適合身且色調柔和的服飾。";
+      }
 
-      // 組合購物關鍵字（風格 + 色系 + 場合）
-      const keywords = styles.join(" ") + " " + colorKeywords + " " + scene + "穿搭";
+      // 膚色推薦色系
+      const skinColorAdvice = {
+        fair: "適合冷色調如藍、紫、灰，能襯托白皙膚色。",
+        medium: "中性色調如橄欖綠、米色、焦糖色較為合適。",
+        olive: "暖色系如橘色、紅棕色、深綠能突顯膚色健康感。",
+        dark: "鮮豔色彩如寶藍、亮紅、金色能讓整體更加亮眼。"
+      };
 
-      // 蝦皮購物搜尋連結
-      const shoppingUrl = 'https://shopee.tw/search?keyword=' + encodeURIComponent(keywords);
+      // 頭髮顏色搭配建議
+      const hairAdvice = {
+        black: "黑髮適合搭配亮色或對比強烈的服飾，營造時尚感。",
+        brown: "棕髮適合大地色系與暖色系，溫暖且自然。",
+        blonde: "金髮搭配淺色系或鮮豔色彩均可，活潑搶眼。",
+        red: "紅髮建議選擇綠色、藍色等冷色調來平衡。",
+        gray: "灰白髮可嘗試中性色及淡雅色系，優雅有質感。",
+        other: "特殊髮色建議搭配簡約服飾，讓髮色成為焦點。"
+      };
 
-      document.getElementById('resultBox').innerHTML = `
-        <h3>你的今日推薦：</h3>
-        <p><strong>搭配風格：</strong>${styleText}</p>
-        <p><strong>場合：</strong>${scene}</p>
-        <p><strong>建議穿搭：</strong>${outfit}</p>
-        <p><strong>推薦色系：</strong>根據你的膚色（${skin}），可嘗試 ${colorKeywords}。</p>
-        <p><strong>購物參考：</strong><a href="${shoppingUrl}" target="_blank" rel="noopener noreferrer">點我到蝦皮搜尋「${keywords}」</a></p>
-      `;
-      document.getElementById('resultBox').style.display = 'block';
-    }
+      // 喜歡風格文字描述
+      const styleDescMap = {
+        casual: "您喜歡休閒風，舒適自在是首要考量。",
+        formal: "您偏好正式風，強調專業與典雅。",
+        sporty: "您喜歡運動風，注重機能與活動方便。",
+        bohemian: "您熱愛波西米亞風，喜歡自由奔放與民族元素。",
+        street: "您偏好街頭潮流，喜歡個性與時尚混搭。",
+        classic: "您喜歡經典風，永不退流行的優雅。",
+        minimalist: "您傾向極簡風，簡單純粹且有質感。",
+        vintage: "您偏愛復古風，懷舊且富有故事感。"
+      };
+
+      // 行程穿搭建議與蝦皮連結
+      function getActivityStyleAndLink(activity) {
+        let advice = "";
+        let link = "";
+
+        switch(activity) {
+          case "work":
+            advice = "建議選擇剪裁合身的襯衫、西裝外套或襯衫裙，呈現專業與自信的形象。";
+            link = "https://shopee.tw/search?keyword=%E8%A5%BF%E8%A3%9D";
+            break;
+          case "casual":
+            advice = "輕鬆舒適的牛仔褲、針織衫或洋裝，搭配休閒鞋，適合自在活動。";
+            link = "https://shopee.tw/search?keyword=%E4%BC%91%E9%96%92%E6%9C%8D%E8%A3%9D";
+            break;
+          case "sport":
+            advice = "功能性運動服、運動褲搭配透氣運動鞋，兼顧舒適與活動方便。";
+            link = "https://shopee.tw/search?keyword=%E9%81%8B%E5%8B%95%E6%9C%8D";
+            break;
+          case "party":
+            advice = "亮眼剪裁的禮服、金屬色或亮片元素服裝，搭配高跟鞋或正式鞋款。";
+            link = "https://shopee.tw/search?keyword=%E7%A6%AE%E6%9C%8D";
+            break;
+          case "travel":
+            advice = "多層次搭配方便穿脫的輕便服裝，搭配舒適的步行鞋與實用背包。";
+            link = "https://shopee.tw/search?keyword=%E6%97%85%E8%A1%8C%E6%9C%8D";
+            break;
+          default:
+            advice = "建議選擇符合個人風格且舒適的服裝，依場合靈活搭配。";
+            link = "https://shopee.tw/";
+        }
+
+        return { advice, link };
+      }
+
+      // 取得行程建議
+      const { advice: activityAdvice, link: activityLink } = getActivityStyleAndLink(data.activity);
+
+      // 組合結果文字
+      const resultText = 
+`${genderNote[data.gender]}
+
+年齡建議：${ageStyle}
+
+膚色建議：${skinColorAdvice[data.skinTone]}
+
+頭髮顏色搭配建議：${hairAdvice[data.hair]}
+
+喜歡的穿搭風格：${styleDescMap[data.style]}
+
+---
+
+今日行程穿搭建議：
+${activityAdvice}
+
+蝦皮服飾推薦連結（點擊查看相關商品）：  
+${activityLink}`;
+
+      resultDiv.textContent = resultText;
+      window.scrollTo({ top: resultDiv.offsetTop, behavior: "smooth" });
+    });
   </script>
+
 </body>
 </html>
